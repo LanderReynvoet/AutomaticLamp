@@ -15,15 +15,17 @@ read projectname
 
 echo "Project name set to:"$projectname
 
-echo "What is the username for the database:"
-read db_user
+echo -e "\e[1;91m!!Username will be used everywhere!!\e[0m"
 
-echo "Username for the database set to:"$db_user
+echo "What is the username:"
+read user
 
-echo "what is your password for the database:"
-read db_pass
+echo "Username set to:"$user
 
-echo "password for the database set"
+echo "what is your password:"
+read pass
+
+echo "password database set"
 
 #before setup
 
@@ -38,7 +40,22 @@ apt upgrade -y
 echo "upgrade finished"
 
 sleep 2
+#making user
 
+
+function make_user {
+	egrep -F "$user" /etc/passwd >/dev/null
+
+	if [ $? -eq 0 ]; then
+		echo "$user exists!"
+		exit 1
+	else
+		pass=$(perl -e 'print crypt($ARGV[0], "password")' $pass)
+		useradd -m -p "$pass" "$user" -s /bin/bash -U
+		[ $? -eq 0 ] && echo -e "\e[1;92mUser has been added!\e[0m" || echo "Failed to add a user!"
+	fi
+           }
+make_user
 #dependencies
 
 echo "starting certificates install"
@@ -56,4 +73,3 @@ echo "php install finished"
 echo "starting mariadb-server install"
 apt install mariadb-server -y
 echo "mariadb install finished"
-
