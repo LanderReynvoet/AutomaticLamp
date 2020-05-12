@@ -3,9 +3,14 @@
 #require sudo
 
 if (( $EUID != 0))
-then echo "Run script with root privileges"
+then echo -e "\e[1;91mRun script with root privileges\e[0m"
 exit
 fi
+
+#display info
+
+echo -e "\e[1;91mErrors will be displayed Red\e[0m"
+echo -e "\e[1;92mInfo will be displayed in Cyan\e[0m"
 
 #saving input variables
 echo "To submit input, press [ENTER]"
@@ -13,31 +18,29 @@ echo "To submit input, press [ENTER]"
 echo "What is your project name:"
 read projectname
 
-echo "Project name set to:"$projectname
-
-echo -e "\e[1;91m!!Username will be used everywhere!!\e[0m"
+echo -e "\e[1;92mProject name set to:"$projectname
 
 echo "What is the username:"
+echo -e "\e[1;91m!!This username will be used everywhere!!\e[0m"
 read user
 
-echo "Username set to:"$user
-
+echo -e "\e[1;92mUsername set to:"$user"\e[0m"
 echo "what is your password:"
 read pass
 
-echo "password database set"
+echo -e "\e[1;92mpassword set\e[0m"
 
 #before setup
 
-echo "starting update"
+echo -e "\e[1;92mstarting update\e[0m"
 apt update
-echo "update finished"
+echo -e "\e[1;92mupdate finished\e[0m"
 
 sleep 2
 
-echo "starting upgrade"
+echo -e "\e[1;92mstarting upgrade\e[0m"
 apt upgrade -y
-echo "upgrade finished"
+echo -e "\e[1;92mupgrade finished\e[0m"
 
 sleep 2
 #making user
@@ -52,24 +55,27 @@ function make_user {
 	else
 		pass=$(perl -e 'print crypt($ARGV[0], "password")' $pass)
 		useradd -m -p "$pass" "$user" -s /bin/bash -U
-		[ $? -eq 0 ] && echo -e "\e[1;92mUser has been added!\e[0m" || echo "Failed to add a user!"
+		[ $? -eq 0 ] && echo -e "\e[1;92mUser has been added!\e[0m" || echo -e "\e[1;91mFailed to add a user!\e[0m"
 	fi
            }
 make_user
-#dependencies
 
-echo "starting certificates install"
+sleep 2
+
+#Gathering dependencies
+
+echo -e "\e[1;92mstarting certificates install\e[0m"
 apt install ca-certificates apt-transport-https -y
-echo "certificates finished"
+echo -e "\e[1;92mcertificates finished\e[0m"
 
-echo "starting apache2 install"
+echo -e "\e[1;92mstarting apache2 install\e[0m"
 apt install apache2 php-mysql libapache2-mod-php -y
-echo "apache finished"
+echo -e "\e[1;92mapache finished\e[0m"
 
-echo "starting php install"
+echo -e "\e[1;92mstarting php install\e[0m"
 apt install php-common php-mbstring php-xml php-zip php-curl -y
-echo "php install finished"
+echo -e "\e[1;92mphp install finished\e[0m"
 
-echo "starting mariadb-server install"
+echo -e "\e[1;92mstarting mariadb-server install\e[0m"
 apt install mariadb-server -y
-echo "mariadb install finished"
+echo -e "\e[1;92mmariadb install finished\e[0m"
