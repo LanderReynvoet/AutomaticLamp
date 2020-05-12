@@ -79,3 +79,12 @@ echo -e "\e[1;92mphp install finished\e[0m"
 echo -e "\e[1;92mstarting mariadb-server install\e[0m"
 apt install mariadb-server mariadb-client -y
 echo -e "\e[1;92mmariadb install finished\e[0m"
+
+#basic apache2 setup
+systemctl start apache2
+systemctl enable apache2
+
+rm /var/www/html/index.html
+touch /var/www/html/index.php
+echo "<?php phpinfo(); ?>" > /var/www/html/index.php
+
