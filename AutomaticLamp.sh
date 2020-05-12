@@ -33,13 +33,13 @@ echo -e "\e[1;92mpassword set\e[0m"
 #before setup
 
 echo -e "\e[1;92mstarting update\e[0m"
-#apt update
+apt update
 echo -e "\e[1;92mupdate finished\e[0m"
 
 sleep 2
 
 echo -e "\e[1;92mstarting upgrade\e[0m"
-#apt upgrade -y
+apt upgrade -y
 echo -e "\e[1;92mupgrade finished\e[0m"
 
 sleep 2
@@ -65,17 +65,17 @@ sleep 2
 #Gathering dependencies
 
 echo -e "\e[1;92mstarting certificates install\e[0m"
-#apt install ca-certificates apt-transport-https -y
+apt install ca-certificates apt-transport-https -y
 echo -e "\e[1;92mcertificates finished\e[0m"
 
 echo -e "\e[1;92mstarting apache2 install\e[0m"
-#apt install apache2 php-mysql libapache2-mod-php -y
+apt install apache2 -y
 echo -e "\e[1;92mapache finished\e[0m"
 
 echo -e "\e[1;92mstarting php install\e[0m"
-#apt install php-common php-mbstring php-xml php-zip php-curl -y
+apt install php -y
 echo -e "\e[1;92mphp install finished\e[0m"
 
 echo -e "\e[1;92mstarting mariadb-server install\e[0m"
-#apt install mariadb-server -y
+apt install mariadb-server mariadb-client -y
 echo -e "\e[1;92mmariadb install finished\e[0m"
