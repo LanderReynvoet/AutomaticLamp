@@ -63,7 +63,7 @@ make_user
 sleep 2
 
 #Gathering dependencies
-
+function gathering_dependencies {
 echo -e "\e[1;92mstarting certificates install\e[0m"
 apt install ca-certificates apt-transport-https -y
 echo -e "\e[1;92mcertificates finished\e[0m"
@@ -79,21 +79,26 @@ echo -e "\e[1;92mphp install finished\e[0m"
 echo -e "\e[1;92mstarting mariadb-server install\e[0m"
 apt install mariadb-server mariadb-client -y
 echo -e "\e[1;92mmariadb install finished\e[0m"
+	}
+gathering_dependencies
 
 #basic apache2 setup
+function apache2_setup {
 systemctl start apache2
 systemctl enable apache2
 
 projectroot=/home/$user/$projectname
-echo "the projectroot is set to:"$projectroot
+echo "The projectroot is set to:"$projectroot
 mkdir $projectroot
 
 ln -s $projectroot /var/www/$projectname
 chown $user:$user $projectroot
 chmod -R 755 $projectroot
-cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/$projectname.conf
+cp /etc/apache2/sites-available/000-default.confa /etc/apache2/sites-available/$projectname.conf
 sed -i 's|/var/www/html|/var/www/'$projectname'|g' /etc/apache2/sites-available/$projectname.conf
 touch $projectroot/index.php
 echo "<?php phpinfo(); ?>" > $projectroot/index.php
 a2ensite $projectname
 systemctl reload apache2
+}
+apache2_setup
