@@ -113,8 +113,13 @@ mkdir $projectroot
 ln -s $projectroot /var/www/$projectname
 chown $user:$user $projectroot
 chmod -R 755 $projectroot
-cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/$projectname.conf
+
+cp /etc/apache2/sites-available/default-ssl.conf /etc/apache2/sites-available/$projectname.conf
 sed -i 's|/var/www/html|/var/www/'$projectname'|g' /etc/apache2/sites-available/$projectname.conf
+sed -i '/ServerAdmin webmaster@localhost/a ServerName '$projectname'' /etc/apache2/sites-available/$projectname.conf
+sed -i 's|/etc/ssl/certs/ssl-cert-snakeoil.pem|/etc/ssl/certs/'$projectname'.pem|g' /etc/apache2/sites-available/$projectname.conf
+sed -i 's|/etc/ssl/private/ssl-cert-snakeoil.key|/etc/ssl/certs/'$projectname'.key|g' /etc/apache2/sites-available/$projectname.conf
+
 touch $projectroot/index.php
 echo "<?php phpinfo(); ?>" > $projectroot/index.php
 a2ensite $projectname
