@@ -84,7 +84,16 @@ echo -e "\e[1;92mmariadb install finished\e[0m"
 systemctl start apache2
 systemctl enable apache2
 
-rm /var/www/html/index.html
-touch /var/www/html/index.php
-echo "<?php phpinfo(); ?>" > /var/www/html/index.php
+projectroot=/home/$user/$projectname
+echo "the projectroot is set to:"$projectroot
+mkdir $projectroot
 
+ln -s $projectroot /var/www/$projectname
+chown $user:$user $projectroot
+chmod -R 755 $projectroot
+cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/$projectname.conf
+sed -i 's|/var/www/html|/var/www/'$projectname'|g' /etc/apache2/sites-available/$projectname.conf
+touch $projectroot/index.php
+echo "<?php phpinfo(); ?>" > $projectroot/index.php
+a2ensite $projectname
+systemctl reload apache2
