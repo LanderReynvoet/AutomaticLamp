@@ -79,8 +79,27 @@ echo -e "\e[1;92mphp install finished\e[0m"
 echo -e "\e[1;92mstarting mariadb-server install\e[0m"
 apt install mariadb-server mariadb-client -y
 echo -e "\e[1;92mmariadb install finished\e[0m"
-	}
+
+echo -e "\e[1;92mStarting to install openssl\e[0m"
+apt install openssl -y
+echo -e "\e[1;92mOpenssl install finished\e[0m"
+	}	
 gathering_dependencies
+
+
+
+#setting setting up ssl  
+function ssl_cert {
+echo -e "Enabeling ssl mod"
+sudo a2enmod ssl
+echo -e "Generating ssl certificate"
+mkdir /etc/ssl/certs/
+openssl req -new -x509 -days 365 -nodes -out /etc/ssl/certs/$projectname.pem -keyout /etc/ssl/certs/$projectname.key -subj "/C=BE/ST=WVL/L=BRUGGE/O=$projectname/OU=Department $projectname/CN=ssl"
+
+}
+ssl_cert
+
+
 
 #basic apache2 setup
 function apache2_setup {
@@ -94,7 +113,7 @@ mkdir $projectroot
 ln -s $projectroot /var/www/$projectname
 chown $user:$user $projectroot
 chmod -R 755 $projectroot
-cp /etc/apache2/sites-available/000-default.confa /etc/apache2/sites-available/$projectname.conf
+cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/$projectname.conf
 sed -i 's|/var/www/html|/var/www/'$projectname'|g' /etc/apache2/sites-available/$projectname.conf
 touch $projectroot/index.php
 echo "<?php phpinfo(); ?>" > $projectroot/index.php
@@ -102,3 +121,6 @@ a2ensite $projectname
 systemctl reload apache2
 }
 apache2_setup
+
+
+
