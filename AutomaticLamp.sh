@@ -108,11 +108,10 @@ ssl_cert
 
 #basic apache2 setup
 function apache2_setup {
-echo "ServerTokens Prod" >> /etc/apache2/apache2.conf
-echo "ServerSignature Off" >> /etc/apache2/apache2.conf
 systemctl restart apache2
 systemctl enable apache2
 a2dissite 000-default.conf 
+sed -i 's|Listen 80|#Listen 80|g' /etc/apache2/ports.conf
 
 echo "The projectroot is set to:"$projectroot
 mkdir $projectroot
@@ -133,6 +132,12 @@ a2ensite $projectname
 systemctl reload apache2
 }
 apache2_setup
+function apache2_security {
+	echo "ServerSignature Off" >> /etc/apache2/apache2.conf
 
+	
+}
+
+apache2_security
 
 
