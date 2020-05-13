@@ -88,12 +88,12 @@ echo -e "\e[1;92mmariadb install finished\e[0m"
 echo -e "\e[1;92mStarting to install openssl\e[0m"
 apt install openssl -y
 echo -e "\e[1;92mOpenssl install finished\e[0m"
-	}	
+	}
 gathering_dependencies
 
 
 
-#setting setting up ssl  
+#setting setting up ssl 
 function ssl_cert {
 echo -e "Enabeling ssl mod"
 sudo a2enmod ssl
@@ -110,7 +110,7 @@ ssl_cert
 function apache2_setup {
 systemctl restart apache2
 systemctl enable apache2
-a2dissite 000-default.conf 
+a2dissite 000-default.conf
 sed -i 's|Listen 80|#Listen 80|g' /etc/apache2/ports.conf
 
 echo "The projectroot is set to:"$projectroot
@@ -134,8 +134,7 @@ systemctl reload apache2
 apache2_setup
 function apache2_security {
 	echo "ServerSignature Off" >> /etc/apache2/apache2.conf
-
-	
+	sed -i 's|Options Indexes FollowSymlinks|Options -Indexes|g' /etc/apache2/apache2.conf
 }
 
 apache2_security
