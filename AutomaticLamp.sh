@@ -108,7 +108,9 @@ ssl_cert
 
 #basic apache2 setup
 function apache2_setup {
-systemctl start apache2
+echo "ServerTokens Prod" >> /etc/apache2/apache2.conf
+echo "ServerSignature Off" >> /etc/apache2/apache2.conf
+systemctl restart apache2
 systemctl enable apache2
 a2dissite 000-default.conf 
 
