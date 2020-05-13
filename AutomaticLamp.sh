@@ -136,7 +136,7 @@ function setup_mysql {
 	mysql -e "CREATE DATABASE ${projectname} /*\!40100 DEFAULT CHARACTER SET utf8 */;"
 	mysql -e "show databases;"
 	mysql -e "CREATE USER ${user}@localhost IDENTIFIED BY '${pass}';"
-	mysql -e "GRANT ALL PRIVILEGES ON ${projectname}.* TO '${user}'@'localhost';"
+	mysql -e "GRANT ALL PRIVILEGES ON *.* TO '${user}'@'localhost' IDENTIFIED BY '${pass}' ;"
 	mysql -e "FLUSH PRIVILEGES;"
 }
 
