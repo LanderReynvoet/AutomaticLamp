@@ -29,7 +29,7 @@ echo "what is your password:"
 read pass
 
 echo -e "\e[1;92mpassword set\e[0m"
-
+projectroot=/home/$user/$projectname
 #before setup
 
 echo -e "\e[1;92mstarting update\e[0m"
@@ -50,8 +50,13 @@ function make_user {
 	grep -F "$user" /etc/passwd >/dev/null
 
 	if [ $? -eq 0 ]; then
-		echo "$user exists!"
-		exit 1
+		echo -e "\e[1;92m${user} exists! project will be installed in homedir\e[0m"
+		if [ -d "$projectroot" ]; then
+		  echo -e "\e[1;91m!!Projectroot already exists!!\e[0m"
+		  echo "Choose new projectname or exsisting folder will be overwritten:"
+		  read projectname
+		fi
+
 	else
 		pass=$(perl -e 'print crypt($ARGV[0], "password")' $pass)
 		useradd -m -p "$pass" "$user" -s /bin/bash -U
@@ -106,7 +111,7 @@ function apache2_setup {
 systemctl start apache2
 systemctl enable apache2
 a2dissite 000-default.conf 
-projectroot=/home/$user/$projectname
+
 echo "The projectroot is set to:"$projectroot
 mkdir $projectroot
 
