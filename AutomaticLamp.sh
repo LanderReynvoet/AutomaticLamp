@@ -69,35 +69,23 @@ sleep 2
 
 #Gathering dependencies
 function gathering_dependencies {
-echo -e "\e[1;92mstarting certificates install\e[0m"
+echo -e "\e[1;92mstarting gathering dependencies, a lost of dependencies can be found on the landing page of the script\e[0m"
 apt install ca-certificates apt-transport-https -y
-echo -e "\e[1;92mcertificates finished\e[0m"
-
-echo -e "\e[1;92mstarting apache2 install\e[0m"
 apt install apache2 -y
-echo -e "\e[1;92mapache finished\e[0m"
-
-echo -e "\e[1;92mstarting php install\e[0m"
 apt install php -y
-echo -e "\e[1;92mphp install finished\e[0m"
-
-echo -e "\e[1;92mstarting mariadb-server install\e[0m"
 apt install mariadb-server mariadb-client -y
-echo -e "\e[1;92mmariadb install finished\e[0m"
-
-echo -e "\e[1;92mStarting to install openssl\e[0m"
 apt install openssl -y
-echo -e "\e[1;92mOpenssl install finished\e[0m"
+echo -e "\e[1;92mAll necessary dependencies installed\e[0m"
 	}
 gathering_dependencies
 
 
 
-#setting setting up ssl 
+#setting setting up ssl
 function ssl_cert {
-echo -e "Enabeling ssl mod"
+echo -e "\e[1;92mEnabeling ssl mod\e[0m"
 sudo a2enmod ssl
-echo -e "Generating ssl certificate"
+echo -e "\e[1;92mGenerating ssl certificate\e[0m"
 mkdir /etc/ssl/certs/
 openssl req -new -x509 -days 365 -nodes -out /etc/ssl/certs/$projectname.pem -keyout /etc/ssl/certs/$projectname.key -subj "/C=BE/ST=WVL/L=BRUGGE/O=$projectname/OU=Department $projectname/CN=ssl"
 
@@ -126,17 +114,21 @@ sed -i '/ServerAdmin webmaster@localhost/a ServerName '${projectname}'' /etc/apa
 sed -i 's|/etc/ssl/certs/ssl-cert-snakeoil.pem|/etc/ssl/certs/'$projectname'.pem|g' /etc/apache2/sites-available/$projectname.conf
 sed -i 's|/etc/ssl/private/ssl-cert-snakeoil.key|/etc/ssl/certs/'$projectname'.key|g' /etc/apache2/sites-available/$projectname.conf
 
-touch $projectroot/index.php
-echo "<?php phpinfo(); ?>" > $projectroot/index.php
+echo -e "\e[1;92mCloning basic php landingpage\e[0m"
+git clone https://github.com/LanderReynvoet/ALAMPphpsite $projectroot
 a2ensite $projectname
 systemctl reload apache2
+echo -e "\e[1;92mBasic Apache2 setup done\e[0m"
 }
 apache2_setup
 function apache2_security {
 	echo "ServerSignature Off" >> /etc/apache2/apache2.conf
 	sed -i 's|Options Indexes FollowSymlinks|Options -Indexes|g' /etc/apache2/apache2.conf
+	echo -e "\e[1;92mBasic Apache2 security done\e[0m"
+
 }
 
 apache2_security
+
 
 
