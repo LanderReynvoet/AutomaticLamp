@@ -146,7 +146,7 @@ function phpmyadmin {
 	echo -e "\e[1;92mPhpmyadmin installation done\e[0m"
 }
 #This will only execute the necessary functions if you just want a new project
-function new_project{
+function new_project {
 	info
 	check_if_sudo
 	setting_up_variables
@@ -158,7 +158,7 @@ function new_project{
 	phpmyadmin
 }
 #Executes all functions
-function full{
+function full {
 	info
 	check_if_sudo
 	setting_up_variables
@@ -171,7 +171,7 @@ function full{
 	phpmyadmin
 }
 #This will show the start menu
-function menu{
+function menu {
 echo "AutomaticLamp"
 echo "  1) If you run this script for the first time choose this option"
 echo "  2) Another project please"
