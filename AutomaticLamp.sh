@@ -58,8 +58,8 @@ function make_user {
 		fi
 
 	else
-		pass=$(perl -e 'print crypt($ARGV[0], "password")' $pass)
-		useradd -m -p "$pass" "$user" -s /bin/bash -U
+		password=$(perl -e 'print crypt($ARGV[0], "password")' $pass)
+		useradd -m -p "$password" "$user" -s /bin/bash -U
 		[ $? -eq 0 ] && echo -e "\e[1;92mUser has been added!\e[0m" || echo -e "\e[1;91mFailed to add a user!\e[0m"
 	fi
            }
@@ -135,7 +135,7 @@ function setup_mysql {
 	systemctl start mysql
 	mysql -e "CREATE DATABASE ${projectname} /*\!40100 DEFAULT CHARACTER SET utf8 */;"
 	mysql -e "show databases;"
-	mysql -e "CREATE USER ${user}@localhost IDENTIFIED BY '${pass}';"
+	mysql -e "CREATE USER '${user}'@'localhost' IDENTIFIED BY '${pass}';"
 	mysql -e "GRANT ALL PRIVILEGES ON *.* TO '${user}'@'localhost' IDENTIFIED BY '${pass}' ;"
 	mysql -e "FLUSH PRIVILEGES;"
 }
