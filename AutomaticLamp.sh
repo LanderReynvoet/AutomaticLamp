@@ -1,5 +1,10 @@
 #!/bin/bash
 
+#display info
+function info{
+echo -e "\e[1;91mErrors will be displayed Red\e[0m"
+echo -e "\e[1;92mInfo will be displayed in Cyan\e[0m"
+}
 #Will check if you run the script with root privileges
 function check_if_sudo {
 if (( $EUID != 0))
@@ -133,42 +138,54 @@ function phpmyadmin {
 	mysql -e "GRANT ALL ON phpmyadmin.* TO 'phpmyadmin'@'localhost' IDENTIFIED BY 'phpmyadmin';"
 	mysql -e "FLUSH PRIVILEGES;"
 	systemctl restart apache2
-	#wget https://raw.githubusercontent.com/LanderReynvoet/AutomaticLamp/master/phpmyadmin.conf -P /etc/apache2/conf-available/
 	cp phpmyadmin.conf /etc/apache2/conf-available/phpmyadmin.conf
 	a2enconf phpmyadmin
 	mkdir -p /var/lib/phpmyadmin/tmp
 	chown www-data:www-data /var/lib/phpmyadmin/tmp
 	systemctl reload apache2
-	
-	#befor
-	#apt install debconf-utils -y 
-	#debconf-set-selections <<<'phpmyadmin phpmyadmin/dbconfig-install boolean true'
-	#debconf-set-selections <<<'phpmyadmin phpmyadmin/app-password-confirm password phpmyadmin'
-	#debconf-set-selections <<<'phpmyadmin phpmyadmin/mysql/admin-pass password phpmyadmin'
-	#debconf-set-selections <<<'phpmyadmin phpmyadmin/mysql/app-pass password phpmyadmin'
-	#mysql -e "CREATE USER 'phpmyadmin'@'localhost' IDENTIFIED BY 'phpmyadmin';" 
-	#mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'phpmyadmin'@'localhost' WITH GRANT OPTION;"
-	#mysql -e "FLUSH PRIVILEGES;"
-	#sed -i 's|dbc_dbuser='phpmyadmin'|dbc_dbpass='phpmyadmin'|g' /etc/dbconfig-common/phpmyadmin.conf
-	#debconf-set-selections <<<'phpmyadmin phpmyadmin/reconfigure-webserver multiselect apache2'
-	#apt install phpmyadmin php-mbstring php-gettext -y 
-	#phpenmod mbstring
-	#systemctl restart apache2
-	#mysql -e "SELECT user,authentication_string,plugin,host FROM mysql.user;"
 	echo -e "\e[1;92mPhpmyadmin installation done\e[0m"
 }
+#This will only execute the necessary functions if you just want a new project
+function new_project{
+	info
+	check_if_sudo
+	setting_up_variables
+	make_user
+	ssl_cert
+	apache2_setup
+	apache2_security
+	setup_mysql
+	phpmyadmin
+}
+#Executes all functions
+function full{
+	info
+	check_if_sudo
+	setting_up_variables
+	make_user
+	gathering_dependencies
+	ssl_cert
+	apache2_setup
+	apache2_security
+	setup_mysql
+	phpmyadmin
+}
+#This will show the start menu
+function menu{
+echo "AutomaticLamp"
+echo "  1) If you run this script for the first time choose this option"
+echo "  2) Another project please"
+echo "  3) Stop the script"
 
-#display info
-echo -e "\e[1;91mErrors will be displayed Red\e[0m"
-echo -e "\e[1;92mInfo will be displayed in Cyan\e[0m"
-check_if_sudo
-setting_up_variables
-make_user
-gathering_dependencies
-ssl_cert
-apache2_setup
-apache2_security
-setup_mysql
-phpmyadmin
+read n
+case $n in
+  1) full;;
+  2) new_project;;
+  3) exit 1;;
+  *) echo "invalid option";;
+esac
+}
+menu
+
 
 
