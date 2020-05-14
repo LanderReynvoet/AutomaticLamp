@@ -1,19 +1,5 @@
 #!/bin/bash
 
-#display info
-
-echo -e "\e[1;91mErrors will be displayed Red\e[0m"
-echo -e "\e[1;92mInfo will be displayed in Cyan\e[0m"
-
-check_if_sudo
-setting_up_variables
-make_user
-gathering_dependencies
-ssl_cert
-apache2_setup
-apache2_security
-setup_mysql
-
 #Will check if you run the script with root privileges
 function check_if_sudo {
 if (( $EUID != 0))
@@ -141,9 +127,9 @@ function phpmyadmin {
 	#echo "phpmyadmin phpmyadmin/dbconfig-install boolean false" | debconf-set-selections
 	apt install debconf-utils -y 
 	debconf-set-selections <<<'phpmyadmin phpmyadmin/dbconfig-install boolean true'
-	debconf-set-selections <<<'phpmyadmin phpmyadmin/app-password-confirm password phpmyadmin_PASSWORD'
-	debconf-set-selections <<<'phpmyadmin phpmyadmin/mysql/admin-pass password phpmyadmin_PASSWORD'
-	debconf-set-selections <<<'phpmyadmin phpmyadmin/mysql/app-pass password phpmyadmin_PASSWORD'
+	debconf-set-selections <<<'phpmyadmin phpmyadmin/app-password-confirm password ${pass}'
+	debconf-set-selections <<<'phpmyadmin phpmyadmin/mysql/admin-pass password ${pass}'
+	debconf-set-selections <<<'phpmyadmin phpmyadmin/mysql/app-pass password ${pass}'
 	debconf-set-selections <<<'phpmyadmin phpmyadmin/reconfigure-webserver multiselect apache2'
 	apt install phpmyadmin php-mbstring php-gettext -y 
 	phpenmod mbstring
@@ -152,8 +138,17 @@ function phpmyadmin {
 	echo -e "\e[1;92mPhpmyadmin installation done\e[0m"
 }
 
-
-
-
+#display info
+echo -e "\e[1;91mErrors will be displayed Red\e[0m"
+echo -e "\e[1;92mInfo will be displayed in Cyan\e[0m"
+check_if_sudo
+setting_up_variables
+make_user
+gathering_dependencies
+ssl_cert
+apache2_setup
+apache2_security
+setup_mysql
+phpmyadmin
 
 
