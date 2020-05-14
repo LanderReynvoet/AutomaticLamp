@@ -131,6 +131,8 @@ function phpmyadmin {
 	debconf-set-selections <<<'phpmyadmin phpmyadmin/mysql/admin-pass password ${pass}'
 	debconf-set-selections <<<'phpmyadmin phpmyadmin/mysql/app-pass password ${pass}'
 	debconf-set-selections <<<'phpmyadmin phpmyadmin/reconfigure-webserver multiselect apache2'
+	mysql -e "CREATE USER 'phpmyadmin'@'localhost' IDENTIFIED BY '${pass}';"
+	mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'phpmyadmin'@'localhost' IDENTIFIED BY '${pass}' ;"
 	apt install phpmyadmin php-mbstring php-gettext -y 
 	phpenmod mbstring
 	systemctl restart apache2
