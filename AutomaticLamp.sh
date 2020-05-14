@@ -86,7 +86,7 @@ function apache2_setup {
 systemctl restart apache2
 systemctl enable apache2
 a2dissite 000-default.conf
-sed -i 's|Listen 80|#Listen 80|g' /etc/apache2/ports.conf
+#sed -i 's|Listen 80|#Listen 80|g' /etc/apache2/ports.conf
 
 echo "The projectroot is set to:"$projectroot
 mkdir $projectroot
