@@ -127,14 +127,15 @@ function setup_mysql {
 function phpmyadmin {
 	wget https://files.phpmyadmin.net/phpMyAdmin/4.9.0.1/phpMyAdmin-4.9.0.1-all-languages.zip -P /tmp
 	unzip /tmp/phpMyAdmin-4.9.0.1-all-languages.zip
-	mv /tmp/phpMyAdmin-4.9.0.1-all-languages/ /usr/share/phpmyadmin
+	mv /tmp/phpMyAdmin-4.9.0.1-all-languages/ /usr/share/phpmyadmin/
 	chown -R www-data:www-data /usr/share/phpmyadmin
 	mysql -e "CREATE DATABASE phpmyadmin DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
 	mysql -e "GRANT ALL ON phpmyadmin.* TO 'phpmyadmin'@'localhost' IDENTIFIED BY 'phpmyadmin';"
 	mysql -e "FLUSH PRIVILEGES;"
 	systemctl restart apache2
-	wget https://raw.githubusercontent.com/LanderReynvoet/AutomaticLamp/master/phpmyadmin.conf -P /etc/apache2/conf-available/
-	a2enconf /etc/apache2/conf-available/phpmyadmin.conf
+	#wget https://raw.githubusercontent.com/LanderReynvoet/AutomaticLamp/master/phpmyadmin.conf -P /etc/apache2/conf-available/
+	cp phpmyadmin.conf /etc/apache2/conf-available/phpmyadmin.conf
+	a2enconf phpmyadmin
 	mkdir -p /var/lib/phpmyadmin/tmp
 	chown www-data:www-data /var/lib/phpmyadmin/tmp
 	systemctl reload apache2
