@@ -68,6 +68,8 @@ apt install apache2 -y
 apt install php -y
 apt install mariadb-server mariadb-client -y
 apt install openssl -y
+apt install unzip -y
+apt install php-imagick php-phpseclib php-php-gettext php7.3-common php7.3-mysql php7.3-gd php7.3-imap php7.3-json php7.3-curl php7.3-zip php7.3-xml php7.3-mbstring php7.3-bz2 php7.3-intl php7.3-gmp -y #required php modules for phpmyadmin
 echo -e "\e[1;92mAll necessary dependencies installed\e[0m"
 	}
 #This will setup the SSL certificate so HTTPS can be used
@@ -122,25 +124,36 @@ function setup_mysql {
 }
 #To work with the datbase not by commandline we also install phpmyadmin
 function phpmyadmin {
-	#echo "phpmyadmin phpmyadmin/internal/skip-preseed boolean true" | debconf-set-selections
-	#echo "phpmyadmin phpmyadmin/reconfigure-webserver multiselect" | debconf-set-selections
-	#echo "phpmyadmin phpmyadmin/dbconfig-install boolean false" | debconf-set-selections
-	apt install debconf-utils -y 
+	wget https://files.phpmyadmin.net/phpMyAdmin/4.9.0.1/phpMyAdmin-4.9.0.1-all-languages.zip -P /tmp
+	unzip /tmp/phpMyAdmin-4.9.0.1-all-languages.zip
+	mv /tmp/phpMyAdmin-4.9.0.1-all-languages/ /usr/share/phpmyadmin
+	chown -R www-data:www-data /usr/share/phpmyadmin
+	mysql -e "CREATE DATABASE phpmyadmin DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+	mysql -e "GRANT ALL ON phpmyadmin.* TO 'phpmyadmin'@'localhost' IDENTIFIED BY 'phpmyadmin';"
+	mysql -e "FLUSH PRIVILEGES;"
+	systemctl restart apache2
+	wget https://raw.githubusercontent.com/LanderReynvoet/AutomaticLamp/master/phpmyadmin.conf -P /etc/apache2/conf-available/
+	a2enconf phpmyadmin.conf
+	mkdir -p /var/lib/phpmyadmin/tmp
+	chown www-data:www-data /var/lib/phpmyadmin/tmp
+	systemctl reload apache2
 	
 	
-	debconf-set-selections <<<'phpmyadmin phpmyadmin/dbconfig-install boolean true'
+	#befor
+	#apt install debconf-utils -y 
+	#debconf-set-selections <<<'phpmyadmin phpmyadmin/dbconfig-install boolean true'
 	#debconf-set-selections <<<'phpmyadmin phpmyadmin/app-password-confirm password phpmyadmin'
 	#debconf-set-selections <<<'phpmyadmin phpmyadmin/mysql/admin-pass password phpmyadmin'
 	#debconf-set-selections <<<'phpmyadmin phpmyadmin/mysql/app-pass password phpmyadmin'
-	mysql -e "CREATE USER 'phpmyadmin'@'localhost' IDENTIFIED BY 'phpmyadmin';" 
-	mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'phpmyadmin'@'localhost' WITH GRANT OPTION;"
-	mysql -e "FLUSH PRIVILEGES;"
-	sed -i 's|dbc_dbuser='phpmyadmin'|dbc_dbpass='phpmyadmin'|g' /etc/dbconfig-common/phpmyadmin.conf
-	debconf-set-selections <<<'phpmyadmin phpmyadmin/reconfigure-webserver multiselect apache2'
-	apt install phpmyadmin php-mbstring php-gettext -y 
-	phpenmod mbstring
-	systemctl restart apache2
-	mysql -e "SELECT user,authentication_string,plugin,host FROM mysql.user;"
+	#mysql -e "CREATE USER 'phpmyadmin'@'localhost' IDENTIFIED BY 'phpmyadmin';" 
+	#mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'phpmyadmin'@'localhost' WITH GRANT OPTION;"
+	#mysql -e "FLUSH PRIVILEGES;"
+	#sed -i 's|dbc_dbuser='phpmyadmin'|dbc_dbpass='phpmyadmin'|g' /etc/dbconfig-common/phpmyadmin.conf
+	#debconf-set-selections <<<'phpmyadmin phpmyadmin/reconfigure-webserver multiselect apache2'
+	#apt install phpmyadmin php-mbstring php-gettext -y 
+	#phpenmod mbstring
+	#systemctl restart apache2
+	#mysql -e "SELECT user,authentication_string,plugin,host FROM mysql.user;"
 	echo -e "\e[1;92mPhpmyadmin installation done\e[0m"
 }
 
