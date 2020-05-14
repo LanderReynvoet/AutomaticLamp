@@ -133,11 +133,10 @@ function phpmyadmin {
 	mysql -e "FLUSH PRIVILEGES;"
 	systemctl restart apache2
 	wget https://raw.githubusercontent.com/LanderReynvoet/AutomaticLamp/master/phpmyadmin.conf -P /etc/apache2/conf-available/
-	a2enconf phpmyadmin.conf
+	a2enconf /etc/apache2/conf-available/phpmyadmin.conf
 	mkdir -p /var/lib/phpmyadmin/tmp
 	chown www-data:www-data /var/lib/phpmyadmin/tmp
 	systemctl reload apache2
-	
 	
 	#befor
 	#apt install debconf-utils -y 
