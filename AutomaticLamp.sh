@@ -126,13 +126,15 @@ function phpmyadmin {
 	#echo "phpmyadmin phpmyadmin/reconfigure-webserver multiselect" | debconf-set-selections
 	#echo "phpmyadmin phpmyadmin/dbconfig-install boolean false" | debconf-set-selections
 	apt install debconf-utils -y 
+	mysql -e "CREATE USER 'phpmyadmin'@'localhost' IDENTIFIED BY 'phpmyadmin';" 
+	mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'phpmyadmin'@'localhost' WITH GRANT OPTION;"
+	mysql -e "FLUSH PRIVILEGES;"
+	sed -i 's|dbc_dbuser='phpmyadmin'|dbc_dbpass='phpmyadmin'|g' /etc/dbconfig-common/phpmyadmin.conf
 	debconf-set-selections <<<'phpmyadmin phpmyadmin/dbconfig-install boolean true'
-	debconf-set-selections <<<'phpmyadmin phpmyadmin/app-password-confirm password ${pass}'
-	debconf-set-selections <<<'phpmyadmin phpmyadmin/mysql/admin-pass password ${pass}'
-	debconf-set-selections <<<'phpmyadmin phpmyadmin/mysql/app-pass password ${pass}'
+	debconf-set-selections <<<'phpmyadmin phpmyadmin/app-password-confirm password phpmyadmin'
+	debconf-set-selections <<<'phpmyadmin phpmyadmin/mysql/admin-pass password phpmyadmin'
+	debconf-set-selections <<<'phpmyadmin phpmyadmin/mysql/app-pass password phpmyadmin'
 	debconf-set-selections <<<'phpmyadmin phpmyadmin/reconfigure-webserver multiselect apache2'
-	mysql -e "CREATE USER 'phpmyadmin'@'localhost' IDENTIFIED BY '${pass}';"
-	mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'phpmyadmin'@'localhost' IDENTIFIED BY '${pass}' ;"
 	apt install phpmyadmin php-mbstring php-gettext -y 
 	phpenmod mbstring
 	systemctl restart apache2
