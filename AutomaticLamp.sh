@@ -69,12 +69,13 @@ function make_user {
 function gathering_dependencies {
 echo -e "\e[1;92mstarting gathering dependencies, a lost of dependencies can be found on the landing page of the script\e[0m"
 apt install ca-certificates apt-transport-https -y
-apt install apache2 -y
-apt install php -y
-apt install mariadb-server mariadb-client -y
+apt install apache2 -y # The webserver
+apt install php -y # The programming language
+apt install mariadb-server mariadb-client -y #The database
 apt install openssl -y
-apt install unzip -y
+apt install unzip -y 
 apt install php-imagick php-phpseclib php-php-gettext php7.3-common php7.3-mysql php7.3-gd php7.3-imap php7.3-json php7.3-curl php7.3-zip php7.3-xml php7.3-mbstring php7.3-bz2 php7.3-intl php7.3-gmp -y #required php modules for phpmyadmin
+apt install php-dom php-mbstring -y #required for laravel 
 echo -e "\e[1;92mAll necessary dependencies installed\e[0m"
 	}
 #This will setup the SSL certificate so HTTPS can be used
@@ -106,12 +107,16 @@ sed -i '/ServerAdmin webmaster@localhost/a ServerName '${projectname}'' /etc/apa
 sed -i 's|/etc/ssl/certs/ssl-cert-snakeoil.pem|/etc/ssl/certs/'$projectname'.pem|g' /etc/apache2/sites-available/$projectname.conf
 sed -i 's|/etc/ssl/private/ssl-cert-snakeoil.key|/etc/ssl/certs/'$projectname'.key|g' /etc/apache2/sites-available/$projectname.conf
 
+
+echo -e "\e[1;92mBasic Apache2 setup done\e[0m"
+}
+#Clonses php language to projectroot
+function php_option {
 echo -e "\e[1;92mCloning basic php landingpage\e[0m"
 git clone https://github.com/LanderReynvoet/ALAMPphpsite $projectroot
 a2ensite $projectname
 systemctl reload apache2
 systemctl start apache2
-echo -e "\e[1;92mBasic Apache2 setup done\e[0m"
 }
 #Stops Apache2 showing information about your server version, operating system, modules installed, etc
 function apache2_security {
@@ -145,6 +150,22 @@ function phpmyadmin {
 	systemctl reload apache2
 	echo -e "\e[1;92mPhpmyadmin installation done\e[0m"
 }
+#Will run the composer install script and installs laravel
+function install_composer {
+sh composerinstall.sh
+mv composer.phar /usr/local/bin/composer
+composer global require laravel/installer
+}
+#Setup basic laravel in projectroot
+function laravel_option{
+(cd /home/$user/ ;  ~/.config/composer/vendor/bin/laravel new $projectname)
+(cd $projectroot ;  chmod  -R g+w storage)
+(cd $projectroot/storage ;  chown user:www-data logs)
+(cd $projectroot ;  chown -R user:www-data storage)
+a2ensite $projectname
+systemctl reload apache2
+systemctl start apache2
+}
 #This will only execute the necessary functions if you just want a new project
 function new_project {
 	info
@@ -169,6 +190,8 @@ function full {
 	apache2_security
 	setup_mysql
 	phpmyadmin
+	install_composer
+	laravel_option
 }
 #This will show the start menu
 function menu {
