@@ -105,6 +105,7 @@ echo -e "\e[1;92mCloning basic php landingpage\e[0m"
 git clone https://github.com/LanderReynvoet/ALAMPphpsite $projectroot
 a2ensite $projectname
 systemctl reload apache2
+systemctl start apache2
 echo -e "\e[1;92mBasic Apache2 setup done\e[0m"
 }
 #Stops Apache2 showing information about your server version, operating system, modules installed, etc
