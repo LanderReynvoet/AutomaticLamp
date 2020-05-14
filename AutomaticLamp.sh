@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #display info
-function info{
+function info {
 echo -e "\e[1;91mErrors will be displayed Red\e[0m"
 echo -e "\e[1;92mInfo will be displayed in Cyan\e[0m"
 }
