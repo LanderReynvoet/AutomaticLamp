@@ -126,7 +126,7 @@ function setup_mysql {
 #To work with the datbase not by commandline we also install phpmyadmin
 function phpmyadmin {
 	wget https://files.phpmyadmin.net/phpMyAdmin/4.9.0.1/phpMyAdmin-4.9.0.1-all-languages.zip -P /tmp
-	unzip /tmp/phpMyAdmin-4.9.0.1-all-languages.zip
+	unzip /tmp/phpMyAdmin-4.9.0.1-all-languages.zip -d /tmp/
 	mv /tmp/phpMyAdmin-4.9.0.1-all-languages/ /usr/share/phpmyadmin/
 	chown -R www-data:www-data /usr/share/phpmyadmin
 	mysql -e "CREATE DATABASE phpmyadmin DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
