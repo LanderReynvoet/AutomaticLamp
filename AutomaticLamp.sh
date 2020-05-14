@@ -143,3 +143,24 @@ function setup_mysql {
 setup_mysql
 
 
+function phpmyadmin {
+	
+	#echo "phpmyadmin phpmyadmin/internal/skip-preseed boolean true" | debconf-set-selections
+	#echo "phpmyadmin phpmyadmin/reconfigure-webserver multiselect" | debconf-set-selections
+	#echo "phpmyadmin phpmyadmin/dbconfig-install boolean false" | debconf-set-selections
+	debconf-set-selections <<< "phpmyadmin phpmyadmin/debconfig-install boolean true"
+	debconf-set-selections <<< "phpmyadmin phpmyadmin/mysql/admin-user string root"
+	debconf-set-selections <<< "phpmyadmin phpmyadmin/mysql/admin-pass password toor"
+	debconf-set-selections <<< "phpmyadmin phpmyadmin/mysql/app-pass password root"
+	debconf-set-selections <<< "phpmyadmin phpmyadmin/app-password-confirm password toor"
+	debconf-set-selections <<< "phpmyadmin phpmyadmin/reconfigure-websever multiselect apache2"
+	debconf-set-selections <<< "phpmyadmin phpmyadmin/database-type select mysql"
+	debconf-set-selections <<< "phpmyadmin phpmyadmin/setup-password password toor" 
+	apt install phpmyadmin php-mbstring php-gettext -y 
+	phpenmod mbstring
+	systemctl restart apache2
+	mysql -e "SELECT user,authentication_string,plugin,host FROM mysql.user;"
+	echo -e "\e[1;92mPhpmyadmin installation done\e[0m"
+}
+
+
