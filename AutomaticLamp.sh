@@ -15,7 +15,6 @@ fi
 }
 #This function will set up all variables used in the script (username, password, projectname)
 function setting_up_variables {
-choice = null
 echo "To submit input, press [ENTER]"
 
 echo "What is your project name:"
@@ -33,7 +32,6 @@ read pass
 
 echo -e "\e[1;92mpassword set\e[0m"
 projectroot=/home/$user/$projectname
-full_or_new=php
 }
 #Here the script updates the list of available packages and their versions and also installs newer versions of the packages
 function uptodate {
