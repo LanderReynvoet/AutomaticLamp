@@ -14,7 +14,7 @@ fi
 }
 #This function will set up all variables used in the script (username, password, projectname)
 function setting_up_variables {
-
+choice = null
 echo "To submit input, press [ENTER]"
 
 echo "What is your project name:"
@@ -105,6 +105,9 @@ ln -s $projectroot /var/www/$projectname
 chown $user:$user $projectroot
 chmod -R 755 $projectroot
 
+if [ $choice = "laravel" ]; then
+	ln -s $projectroot/public /var/www/$projectname
+fi
 cp /etc/apache2/sites-available/default-ssl.conf /etc/apache2/sites-available/$projectname.conf
 sed -i 's|/var/www/html|/var/www/'$projectname'|g' /etc/apache2/sites-available/$projectname.conf
 sed -i '/ServerAdmin webmaster@localhost/a ServerName '${projectname}'' /etc/apache2/sites-available/$projectname.conf
@@ -163,9 +166,9 @@ su - $user -c "composer global require laravel/installer"
 }
 #Setup basic laravel in projectroot
 function laravel_option {
-(cd /home/$user/ ;  ~/.config/composer/vendor/bin/laravel new $projectname)
-(cd $projectroot ;  chmod  -R g+w storage)
-(cd $projectroot ;  chown -R user:www-data storage)
+su - $user -c  "~/.config/composer/vendor/bin/laravel new $projectname"
+chmod  -R g+w $projecroot/storage
+chown -R www-data:www-data $projectroot/storage)
 a2ensite $projectname
 systemctl reload apache2
 systemctl start apache2
