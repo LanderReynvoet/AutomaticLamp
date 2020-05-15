@@ -76,6 +76,7 @@ apt install openssl -y
 apt install unzip -y 
 apt install php-imagick php-phpseclib php-php-gettext php7.3-common php7.3-mysql php7.3-gd php7.3-imap php7.3-json php7.3-curl php7.3-zip php7.3-xml php7.3-mbstring php7.3-bz2 php7.3-intl php7.3-gmp -y #required php modules for phpmyadmin
 apt install php-dom php-mbstring -y #required for laravel 
+apt install sudo
 echo -e "\e[1;92mAll necessary dependencies installed\e[0m"
 	}
 #This will setup the SSL certificate so HTTPS can be used
@@ -166,12 +167,17 @@ a2ensite $projectname
 systemctl reload apache2
 systemctl start apache2
 }
+#Adding user to sudo
+function adding_to_sudo {
+/sbin/adduser $user sudo
+}
 #This will only execute the necessary functions if you just want a new project
 function new_project {
 	info
 	check_if_sudo
 	setting_up_variables
 	make_user
+	adding_to_sudo
 	ssl_cert
 	apache2_setup
 	apache2_security
@@ -185,6 +191,7 @@ function full {
 	setting_up_variables
 	make_user
 	gathering_dependencies
+	adding_to_sudo
 	ssl_cert
 	apache2_setup
 	apache2_security
