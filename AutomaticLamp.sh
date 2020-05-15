@@ -197,7 +197,7 @@ function full {
 	apache2_security
 	setup_mysql
 	phpmyadmin
-	install_composer
+	install_composer_and_laravel
 	laravel_option
 }
 #This will show the start menu
