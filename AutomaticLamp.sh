@@ -222,8 +222,8 @@ function new_project {
 }
 #Executes all functions
 function full {
-	minimal
 	gathering_dependencies
+	minimal
 	if [ $choice = "php" ]; then
 		php_option
 	elif [ $choice = "laravel" ]; then
