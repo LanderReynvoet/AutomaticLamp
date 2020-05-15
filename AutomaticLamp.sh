@@ -167,7 +167,7 @@ su - $user -c "composer global require laravel/installer"
 }
 #Setup basic laravel in projectroot
 function laravel_option {
-su - $user -c "~/.composer/vendor/bin/laravel new $projectname"
+su - $user -c "composer create-project --prefer-dist laravel/laravel $projectname"
 chmod  -R g+w $projecroot/storage
 chown -R www-data:www-data $projectroot/storage
 ln -s $projectroot/public /var/www/$projectname
