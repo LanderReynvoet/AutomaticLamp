@@ -181,7 +181,6 @@ function adding_to_sudo {
 
 #minimal functions needed to create a project
 function minimal {	
-	info
 	check_if_sudo
 	make_user
 	adding_to_sudo
@@ -208,6 +207,7 @@ esac
 }
 #This will only execute the necessary functions if you just want a new project
 function new_project {
+	info
 	setting_up_variables
 	minimal
 	if [ $choice = "php" ]; then
@@ -221,6 +221,7 @@ function new_project {
 }
 #Executes all functions
 function full {
+	info
 	setting_up_variables
 	gathering_dependencies
 	minimal
