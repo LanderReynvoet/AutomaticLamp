@@ -3,7 +3,8 @@
 #display info
 function info {
 echo -e "\e[1;91mErrors will be displayed Red\e[0m"
-echo -e "\e[1;92mInfo will be displayed in Cyan\e[0m"
+echo -e "\e[1;92mInfo will be displayed in green\e[0m"
+echo -e "\e[1;92mInput may not contain spaces or special characters\e[0m"
 }
 #Will check if you run the script with root privileges
 function check_if_sudo {
@@ -168,7 +169,7 @@ su - $user -c "composer global require laravel/installer"
 #Setup basic laravel in projectroot
 function laravel_option {
 su - $user -c "composer create-project --prefer-dist laravel/laravel $projectname"
-chmod  -R g+w $projecroot/storage
+chmod  -R g+w "$projecroot/storage"
 chown -R www-data:www-data $projectroot/storage
 ln -s $projectroot/public /var/www/$projectname
 a2ensite $projectname
@@ -184,7 +185,6 @@ function adding_to_sudo {
 function minimal {	
 	info
 	check_if_sudo
-	setting_up_variables
 	make_user
 	adding_to_sudo
 	ssl_cert
@@ -210,6 +210,7 @@ esac
 }
 #This will only execute the necessary functions if you just want a new project
 function new_project {
+	setting_up_variables
 	minimal
 	if [ $choice = "php" ]; then
 		php_option
@@ -222,6 +223,7 @@ function new_project {
 }
 #Executes all functions
 function full {
+	setting_up_variables
 	gathering_dependencies
 	minimal
 	if [ $choice = "php" ]; then
