@@ -151,11 +151,11 @@ function phpmyadmin {
 	systemctl reload apache2
 	echo -e "\e[1;92mPhpmyadmin installation done\e[0m"
 }
-#Will run the composer install script and installs laravel
-function install_composer {
+#Will run the composer and laravel install 
+function install_composer_and_laravel {
 sh composerinstall.sh
 mv composer.phar /usr/local/bin/composer
-composer global require laravel/installer
+su - $user -c "composer global require laravel/installer"
 }
 #Setup basic laravel in projectroot
 function laravel_option {
