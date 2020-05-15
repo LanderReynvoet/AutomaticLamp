@@ -157,7 +157,7 @@ mv composer.phar /usr/local/bin/composer
 composer global require laravel/installer
 }
 #Setup basic laravel in projectroot
-function laravel_option{
+function laravel_option {
 (cd /home/$user/ ;  ~/.config/composer/vendor/bin/laravel new $projectname)
 (cd $projectroot ;  chmod  -R g+w storage)
 (cd $projectroot/storage ;  chown user:www-data logs)
