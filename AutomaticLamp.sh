@@ -32,6 +32,7 @@ read pass
 
 echo -e "\e[1;92mpassword set\e[0m"
 projectroot=/home/$user/$projectname
+full_or_new=php
 }
 #Here the script updates the list of available packages and their versions and also installs newer versions of the packages
 function uptodate {
@@ -99,15 +100,15 @@ a2dissite 000-default.conf
 sed -i 's|Listen 80|#Listen 80|g' /etc/apache2/ports.conf
 
 echo "The projectroot is set to:"$projectroot
-mkdir $projectroot
 
-ln -s $projectroot /var/www/$projectname
-chown $user:$user $projectroot
-chmod -R 755 $projectroot
 
-if [ $choice = "laravel" ]; then
-	ln -s $projectroot/public /var/www/$projectname
+if [ $choice != "laravel" ]; then
+	mkdir $projectroot
+	ln -s $projectroot /var/www/$projectname
+	chown $user:$user $projectroot
+	chmod -R 755 $projectroot
 fi
+
 cp /etc/apache2/sites-available/default-ssl.conf /etc/apache2/sites-available/$projectname.conf
 sed -i 's|/var/www/html|/var/www/'$projectname'|g' /etc/apache2/sites-available/$projectname.conf
 sed -i '/ServerAdmin webmaster@localhost/a ServerName '${projectname}'' /etc/apache2/sites-available/$projectname.conf
@@ -169,6 +170,7 @@ function laravel_option {
 su - $user -c "~/.composer/vendor/bin/laravel new $projectname"
 chmod  -R g+w $projecroot/storage
 chown -R www-data:www-data $projectroot/storage
+ln -s $projectroot/public /var/www/$projectname
 a2ensite $projectname
 systemctl reload apache2
 systemctl start apache2
@@ -180,15 +182,15 @@ function adding_to_sudo {
 #This will make your choice of the new project
 #Menu for choosing new project
 function choose_project {
-echo "Choos new project"
+echo "Choose new project"
 echo "  1) Php basic site"
 echo "  2) Laravel"
 echo "  3) Stop the script"
 
 read n
 case $n in
-  1) choice=php;new_project;;
-  2) choice=laravel;new_project;;
+  1) choice=php;$full_or_new;;
+  2) choice=laravel;$full_or_new;;
   3) exit 1;;
   *) echo "invalid option";;
 esac
@@ -227,24 +229,30 @@ function full {
 	apache2_security
 	setup_mysql
 	phpmyadmin
-	php_option
+	if [ $choice = "php" ]; then
+		php_option
+	elif [ $choice = "laravel" ]; then
+		install_composer_and_laravel
+		laravel_option
+	else
+		choose_project
+	fi
 }
 #This will show the start menu
-function menu {
-echo "AutomaticLamp"
+
+function menu2 {
+echo "AutomaticLAMP"
 echo "  1) If you run this script for the first time choose this option"
 echo "  2) Another project please"
 echo "  3) Stop the script"
 
 read n
 case $n in
-  1) full;;
-  2) choose_project;;
+  1) full_or_new=full ; choose_project;;
+  2) full_or_new=new_project ; choose_project;;
   3) exit 1;;
   *) echo "invalid option";;
 esac
 }
-menu
-
  
 
