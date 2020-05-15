@@ -177,9 +177,22 @@ systemctl start apache2
 }
 #Adding user to sudo
 function adding_to_sudo {
-/sbin/adduser $user sudo
+	adduser $user sudo
 }
-#This will make your choice of the new project
+
+#minimal functions needed to create a project
+function minimal {	
+	info
+	check_if_sudo
+	setting_up_variables
+	make_user
+	adding_to_sudo
+	ssl_cert
+	apache2_setup
+	apache2_security
+	setup_mysql
+	phpmyadmin
+}
 #Menu for choosing new project
 function choose_project {
 echo "Choose new project"
@@ -197,16 +210,7 @@ esac
 }
 #This will only execute the necessary functions if you just want a new project
 function new_project {
-	info
-	check_if_sudo
-	setting_up_variables
-	make_user
-	adding_to_sudo
-	ssl_cert
-	apache2_setup
-	apache2_security
-	setup_mysql
-	phpmyadmin
+	minimal
 	if [ $choice = "php" ]; then
 		php_option
 	elif [ $choice = "laravel" ]; then
@@ -218,17 +222,8 @@ function new_project {
 }
 #Executes all functions
 function full {
-	info
-	check_if_sudo
-	setting_up_variables
-	make_user
+	minimal
 	gathering_dependencies
-	adding_to_sudo
-	ssl_cert
-	apache2_setup
-	apache2_security
-	setup_mysql
-	phpmyadmin
 	if [ $choice = "php" ]; then
 		php_option
 	elif [ $choice = "laravel" ]; then
@@ -239,7 +234,6 @@ function full {
 	fi
 }
 #This will show the start menu
-
 function menu2 {
 echo "AutomaticLAMP"
 echo "  1) If you run this script for the first time choose this option"
@@ -254,5 +248,5 @@ case $n in
   *) echo "invalid option";;
 esac
 }
- 
+menu2
 
