@@ -172,6 +172,21 @@ systemctl start apache2
 function adding_to_sudo {
 /sbin/adduser $user sudo
 }
+#This will make your choice of the new project
+#Menu for choosing new project
+function choose_project {
+echo "	1) Php basic site"
+echo "  2) Laravel"
+echo "  3) Stop the script"
+
+read n
+case $n in
+  1) choice=php;;
+  2) choice=laravel;;
+  3) exit 1;;
+  *) echo "invalid option";;
+esac
+}
 #This will only execute the necessary functions if you just want a new project
 function new_project {
 	info
@@ -184,6 +199,14 @@ function new_project {
 	apache2_security
 	setup_mysql
 	phpmyadmin
+	if [ $choice = "php" ]; then
+		php_option
+	elif [ $choice = "laravel" ]; then
+		install_composer_and_laravel
+		laravel_option
+	else
+		choose_project
+	fi
 }
 #Executes all functions
 function full {
@@ -198,8 +221,7 @@ function full {
 	apache2_security
 	setup_mysql
 	phpmyadmin
-	install_composer_and_laravel
-	laravel_option
+	php_option
 }
 #This will show the start menu
 function menu {
@@ -211,11 +233,12 @@ echo "  3) Stop the script"
 read n
 case $n in
   1) full;;
-  2) new_project;;
+  2) choose_project;;
   3) exit 1;;
   *) echo "invalid option";;
 esac
 }
 menu
 
+ 
 
