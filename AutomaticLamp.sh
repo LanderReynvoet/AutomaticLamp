@@ -175,14 +175,15 @@ function adding_to_sudo {
 #This will make your choice of the new project
 #Menu for choosing new project
 function choose_project {
-echo "	1) Php basic site"
+echo "Choos new project"
+echo "  1) Php basic site"
 echo "  2) Laravel"
 echo "  3) Stop the script"
 
 read n
 case $n in
-  1) choice=php;;
-  2) choice=laravel;;
+  1) choice=php;new_project;;
+  2) choice=laravel;new_project;;
   3) exit 1;;
   *) echo "invalid option";;
 esac
