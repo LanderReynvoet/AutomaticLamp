@@ -181,7 +181,6 @@ function adding_to_sudo {
 
 #minimal functions needed to create a project
 function minimal {	
-	check_if_sudo
 	make_user
 	adding_to_sudo
 	ssl_cert
@@ -207,6 +206,7 @@ esac
 }
 #This will only execute the necessary functions if you just want a new project
 function new_project {
+	check_if_sudo
 	info
 	setting_up_variables
 	minimal
@@ -221,6 +221,7 @@ function new_project {
 }
 #Executes all functions
 function full {
+	check_if_sudo
 	info
 	setting_up_variables
 	gathering_dependencies
