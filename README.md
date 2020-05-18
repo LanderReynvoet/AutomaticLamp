@@ -6,3 +6,6 @@ The script is intended for a Linux distro, Debian 10 - Buster. It automatically 
 
 We also recorded a video. It explains in detail how the user should run through the script and help him understand what is happening by the feedback given by the script itself.
 
+https://www.youtube.com/watch?v=upUhU1NMWAA
+
+
