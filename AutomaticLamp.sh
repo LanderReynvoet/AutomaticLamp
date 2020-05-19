@@ -209,6 +209,7 @@ function new_project {
 	check_if_sudo
 	info
 	setting_up_variables
+	uptodate 
 	minimal
 	if [ $choice = "php" ]; then
 		php_option
@@ -224,6 +225,7 @@ function full {
 	check_if_sudo
 	info
 	setting_up_variables
+	uptodate
 	gathering_dependencies
 	minimal
 	if [ $choice = "php" ]; then
